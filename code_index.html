@@ -1,0 +1,1507 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>不抱也能輕鬆移動！長照移位無敵大解密｜互動網頁簡報</title>
+  <!-- 載入 Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- 載入 Google Fonts 圓潤溫暖中文字體 (Zen Maru Gothic + Noto Sans TC) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&family=Zen+Maru+Gothic:wght@500;700;900&display=swap" rel="stylesheet" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Zen Maru Gothic"', '"Noto Sans TC"', 'sans-serif'],
+          },
+          colors: {
+            cream: '#FDF8EE',
+            paper: '#FAF3E3',
+            ink: '#4A3B32',
+            sage: '#6B9E78',
+            sageLight: '#E6F3EA',
+            coral: '#E07A5F',
+            coralLight: '#FDECE7',
+            mustard: '#D99B26',
+            mustardLight: '#FDF2D6',
+            skySoft: '#5B8FB9',
+            skyLight: '#E8F2FA',
+          },
+          boxShadow: {
+            card: '0 6px 0 rgba(74, 59, 50, 0.12), 0 10px 24px rgba(74, 59, 50, 0.08)',
+            pill: '0 3px 0 rgba(74, 59, 50, 0.15)',
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* 手繪繪本風底紋與基礎樣式 */
+    body {
+      background-color: #FDF8EE;
+      background-image:
+        radial-gradient(#E8DEC8 1px, transparent 1px),
+        radial-gradient(#E8DEC8 1px, #FDF8EE 1px);
+      background-size: 32px 32px;
+      background-position: 0 0, 16px 16px;
+      color: #4A3B32;
+      overflow-x: hidden;
+    }
+
+    /* 投影片轉場動畫 */
+    .slide-section {
+      display: none;
+      animation: slideFadeIn 0.38s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .slide-section.active {
+      display: flex;
+    }
+
+    @keyframes slideFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(12px) scale(0.99);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    /* 手繪外框線條感 */
+    .storybook-border {
+      border: 2.5px solid #6E5849;
+    }
+    .storybook-dashed {
+      border: 2px dashed #9E8574;
+    }
+
+    /* 自訂捲軸（針對小螢幕內容較多時） */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #FAF3E3;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C7B299;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between select-none md:select-auto">
+
+  <!-- 頂部進度條 -->
+  <div class="fixed top-0 left-0 right-0 h-1.5 bg-[#EBDDC5] z-50">
+    <div id="progress-bar" class="h-full bg-gradient-to-r from-[#6B9E78] via-[#E07A5F] to-[#D99B26] transition-all duration-300" style="width: 4%;"></div>
+  </div>
+
+  <!-- 頂部精簡狀態列 -->
+  <header class="w-full px-4 pt-3 pb-1 flex items-center justify-between max-w-6xl mx-auto z-40">
+    <div class="flex items-center gap-2">
+      <span class="inline-flex items-center justify-center w-8 h-8 rounded-full bg-sage text-white font-bold text-sm shadow-sm">
+        松
+      </span>
+      <span class="text-xs sm:text-sm font-bold tracking-wide text-[#6E5849]">
+        青松健康｜長照移位無敵大解密
+      </span>
+    </div>
+    <div class="flex items-center gap-2">
+      <span id="chapter-badge" class="hidden sm:inline-block px-3 py-1 rounded-full text-xs font-bold bg-[#EFE5D1] text-[#5C493E]">
+        單元一：核心觀念
+      </span>
+      <button onclick="toggleToc(true)" class="px-3 py-1.5 rounded-full bg-white/90 storybook-border text-xs sm:text-sm font-bold hover:bg-mustardLight transition flex items-center gap-1.5 shadow-sm cursor-pointer">
+        <svg class="w-4 h-4 text-coral" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h10" />
+        </svg>
+        <span>章節目錄</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 簡報主舞台區 -->
+  <main id="presentation-stage" class="flex-1 w-full max-w-6xl mx-auto px-4 py-2 sm:py-4 flex items-center justify-center">
+
+    <!-- ==================== SLIDE 1: 封面 ==================== -->
+    <section id="s-cover" data-title="封面：長照移位無敵大解密" data-chapter="開場介紹" class="slide-section active w-full flex-col items-center justify-center text-center bg-cream/95 storybook-border rounded-3xl p-6 sm:p-12 shadow-card relative overflow-hidden">
+      <!-- 裝飾角落 -->
+      <div class="absolute top-3 left-3 w-8 h-8 border-t-4 border-l-4 border-sage/60 rounded-tl-xl"></div>
+      <div class="absolute top-3 right-3 w-8 h-8 border-t-4 border-r-4 border-coral/60 rounded-tr-xl"></div>
+      <div class="absolute bottom-3 left-3 w-8 h-8 border-b-4 border-l-4 border-coral/60 rounded-bl-xl"></div>
+      <div class="absolute bottom-3 right-3 w-8 h-8 border-b-4 border-r-4 border-sage/60 rounded-br-xl"></div>
+
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-mustardLight border border-mustard/40 text-ink font-bold text-xs sm:text-sm mb-4">
+        <span>✨ 零抬舉政策（Non-Lift Policy）實務指南</span>
+      </div>
+
+      <h1 class="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight leading-tight mb-3">
+        <span class="text-mustard">不抱</span>也能輕鬆移動！<br />
+        <span class="text-coral">長照移位</span><span class="text-sage">無敵大解密</span>
+      </h1>
+
+      <!-- 手繪風格溫馨插畫 SVG -->
+      <div class="my-4 sm:my-6 w-48 sm:w-64 h-36 sm:h-44 mx-auto bg-white/80 rounded-3xl storybook-dashed flex items-center justify-center p-3 shadow-inner">
+        <svg viewBox="0 0 240 160" class="w-full h-full">
+          <!-- 溫暖光暈 -->
+          <circle cx="120" cy="85" r="62" fill="#FDF2D6" />
+          <!-- 愛心裝飾 -->
+          <path d="M52 45 C52 38, 62 38, 62 45 C62 38, 72 38, 72 45 C72 54, 62 60, 62 60 C62 60, 52 54, 52 45 Z" fill="#F4A28C" />
+          <path d="M172 40 C172 34, 180 34, 180 40 C180 34, 188 34, 188 40 C188 47, 180 52, 180 52 C180 52, 172 47, 172 40 Z" fill="#A8D5BA" />
+          <!-- 照顧者 -->
+          <circle cx="92" cy="56" r="16" fill="#FAD7C3" stroke="#4A3B32" stroke-width="2.5" />
+          <path d="M76 54 Q92 34 108 54" fill="#6E5849" />
+          <path d="M72 135 L76 80 Q92 72 108 80 L112 135 Z" fill="#A8D5BA" stroke="#4A3B32" stroke-width="2.5" />
+          <!-- 長輩 -->
+          <circle cx="146" cy="60" r="15" fill="#FAD7C3" stroke="#4A3B32" stroke-width="2.5" />
+          <circle cx="146" cy="44" r="9" fill="#D8D8D8" stroke="#4A3B32" stroke-width="2" />
+          <path d="M128 135 L132 82 Q146 75 160 82 L164 135 Z" fill="#F9E4A7" stroke="#4A3B32" stroke-width="2.5" />
+          <!-- 移位腰帶重點標示 -->
+          <rect x="129" y="96" width="34" height="11" rx="4" fill="#E07A5F" stroke="#4A3B32" stroke-width="2" />
+          <!-- 照顧者手扶腰帶 -->
+          <path d="M104 88 Q120 98 132 101" fill="none" stroke="#4A3B32" stroke-width="3" stroke-linecap="round" />
+        </svg>
+      </div>
+
+      <p class="text-base sm:text-xl md:text-2xl font-bold text-[#5C493E] max-w-2xl mx-auto mb-6">
+        給照顧者的溫馨實務手帳：安全原則 × 輪椅轉位 × 上下車技巧
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button onclick="nextSlide()" class="px-7 py-3.5 rounded-2xl bg-coral text-white font-black text-base sm:text-lg storybook-border shadow-pill hover:brightness-105 active:translate-y-0.5 transition cursor-pointer flex items-center gap-2">
+          <span>開始學習省力秘訣</span>
+          <span>➔</span>
+        </button>
+        <button onclick="goToSlideById('s-quiz')" class="px-5 py-3.5 rounded-2xl bg-sageLight text-ink font-bold text-sm sm:text-base storybook-border shadow-pill hover:bg-sage/20 transition cursor-pointer">
+          🎯 直接體驗移位小測驗
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 2: 講師介紹 ==================== -->
+    <section id="s-speaker" data-title="講師介紹：陳仁彰 職能治療師" data-chapter="開場介紹" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="flex flex-col md:flex-row items-center gap-6 md:gap-10">
+        <!-- 左側學經歷 -->
+        <div class="flex-1 w-full">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-sageLight text-sage font-bold text-xs sm:text-sm mb-2">
+            <span>青松健康（股票代號 6931）</span>
+          </div>
+          <h2 class="text-3xl sm:text-4xl font-black text-ink mb-4 flex items-center gap-3">
+            <span>陳仁彰</span>
+            <span class="text-base sm:text-lg font-bold px-3 py-1 rounded-xl bg-skyLight text-skySoft border border-skySoft/30">
+              職能治療師最高層級 OT4
+            </span>
+          </h2>
+
+          <div class="space-y-3 text-base sm:text-lg font-bold">
+            <div class="p-3.5 rounded-2xl bg-white/90 border-2 border-[#E3D5BE] flex items-start gap-3">
+              <span class="text-2xl">🎓</span>
+              <div>
+                <span class="text-xs text-[#8C7362] block">學歷背景</span>
+                <span>高雄醫學院復健醫學系職能治療組</span>
+              </div>
+            </div>
+
+            <div class="p-3.5 rounded-2xl bg-white/90 border-2 border-[#E3D5BE] flex items-start gap-3">
+              <span class="text-2xl">🏢</span>
+              <div>
+                <span class="text-xs text-[#8C7362] block">現任職務</span>
+                <span>青松健康股份有限公司 營運部經理</span>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-2xl bg-mustardLight/60 border-2 border-mustard/40 grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-sm sm:text-base">
+              <div class="flex items-center gap-2"><span>🤝</span> 青松長照社團法人監察人</div>
+              <div class="flex items-center gap-2"><span>🏅</span> 南投縣職能治療師公會監事</div>
+              <div class="flex items-center gap-2"><span>❤️</span> 全國優良職能治療師</div>
+              <div class="flex items-center gap-2"><span>🌱</span> 預防與延緩失能照護方案指導員</div>
+              <div class="flex items-center gap-2 sm:col-span-2 text-coral"><span>🛠️</span> 甲類輔具評估人員</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 右側個人形象框（可替換成講師自己的 Q 版人像照片） -->
+        <div class="w-full md:w-72 flex flex-col items-center">
+          <div class="w-56 h-64 sm:w-64 sm:h-72 rounded-3xl bg-white storybook-border p-3 shadow-card flex flex-col items-center justify-center text-center relative overflow-hidden">
+            <!-- 提示：若要放上您的 Q 版圖片，只要把下方 img 的 src 換成您的圖片檔名（例如 avatar.png）並移除 hidden 即可 -->
+            <img src="avatar.png" alt="陳仁彰講師Q版人像" class="hidden w-full h-full object-cover rounded-2xl" onload="this.classList.remove('hidden'); this.nextElementSibling.classList.add('hidden');" />
+            <div class="flex flex-col items-center justify-center h-full">
+              <div class="w-24 h-24 rounded-full bg-skyLight border-2 border-skySoft flex items-center justify-center text-5xl mb-3">
+                👨‍⚕️
+              </div>
+              <p class="font-black text-lg text-ink">陳仁彰 治療師</p>
+              <p class="text-xs text-[#7D6657] mt-1 px-2">
+                「用對物理力學與輔具，<br />讓照顧不再腰痠背痛！」
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 3: 核心理念 ==================== -->
+    <section id="s-principle" data-title="移位最重要的事：保護你，也保護他" data-chapter="單元一：核心觀念" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-mustardLight text-mustard font-bold text-xs sm:text-sm">核心雙贏哲學</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">移位最重要的事：保護你，也保護他</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6 flex-1">
+        <!-- 左卡：保護自己 -->
+        <div class="rounded-3xl bg-sageLight/90 storybook-border p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-12 h-12 rounded-2xl bg-sage text-white flex items-center justify-center text-2xl font-black shadow-sm">🛡️</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-sage">保護自己</h3>
+            </div>
+            <p class="text-lg sm:text-xl font-black text-ink mb-2">告別腰痠背痛！</p>
+            <p class="text-base sm:text-lg leading-relaxed text-[#5C493E]">
+              落實<strong class="text-sage underline decoration-2">「零抬舉政策（Non-Lift Policy）」</strong>，善用輔具與物理力學，不靠蠻力硬抬，讓照顧工作更安全省力。
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-sage/30 text-sm font-bold text-sage">
+            ✔ 預防照顧者職業傷害與椎間盤突出
+          </div>
+        </div>
+
+        <!-- 右卡：保護長輩 -->
+        <div class="rounded-3xl bg-coralLight/90 storybook-border p-6 flex flex-col justify-between">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="w-12 h-12 rounded-2xl bg-coral text-white flex items-center justify-center text-2xl font-black shadow-sm">🤝</span>
+              <h3 class="text-2xl sm:text-3xl font-black text-coral">保護長輩</h3>
+            </div>
+            <p class="text-lg sm:text-xl font-black text-ink mb-2">促進自立支援！</p>
+            <p class="text-base sm:text-lg leading-relaxed text-[#5C493E]">
+              讓長輩發揮<strong class="text-coral underline decoration-2">剩餘力量</strong>，維持身體機能與關節活動度，在移動過程中找回安全感與尊嚴。
+            </p>
+          </div>
+          <div class="mt-4 pt-3 border-t border-coral/30 text-sm font-bold text-coral">
+            ✔ 避免過度代勞導致肌力快速退化
+          </div>
+        </div>
+      </div>
+
+      <!-- 底部金句橫幅 -->
+      <div class="mt-6 p-4 rounded-2xl bg-mustardLight storybook-border text-center">
+        <p class="text-lg sm:text-2xl font-black text-ink">
+          💡 照顧不是單向的搬運，而是「雙向的合作」！
+        </p>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 4: 破除迷思 ==================== -->
+    <section id="s-myth" data-title="破除迷思：別再從正前方死抱了！" data-chapter="單元一：核心觀念" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-coralLight text-coral font-bold text-xs sm:text-sm">觀念大翻轉</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">破除迷思：別再從「正前方死抱」了！</h2>
+        <p class="text-sm sm:text-base text-[#6E5849] mt-1">傳統的「正面抱起」，其實是一場兩敗俱傷的消耗</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+        <!-- NG 傳統正面死抱 -->
+        <div class="rounded-3xl bg-[#FDE8E8] border-2 border-[#D9534F] p-5 sm:p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 rounded-full bg-[#D9534F] text-white flex items-center justify-center text-xl font-black">✕</span>
+            <h3 class="text-xl sm:text-2xl font-black text-[#B52B27]">傳統前方死抱（NG）</h3>
+          </div>
+          <ul class="space-y-3 text-base sm:text-lg font-bold text-[#5C3A38]">
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#D9534F] mt-0.5">●</span>
+              <span><strong>擋住長輩向前的去路：</strong>緊緊抱住會阻擋「重心向前轉移」的空間。</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#D9534F] mt-0.5">●</span>
+              <span><strong>有力量也使不出來：</strong>長輩腿部即使有殘存肌力也無從施展，加速退化。</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-[#D9534F] mt-0.5">●</span>
+              <span><strong>腰部受力集中（Critical Shear Stress）：</strong>照顧者極易拉傷腰椎與頸肩。</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- OK 側邊引導協同 -->
+        <div class="rounded-3xl bg-sageLight border-2 border-sage p-5 sm:p-6">
+          <div class="flex items-center gap-3 mb-4">
+            <span class="w-10 h-10 rounded-full bg-sage text-white flex items-center justify-center text-xl font-black">✓</span>
+            <h3 class="text-xl sm:text-2xl font-black text-[#3D6E49]">側邊引導協同（推薦）</h3>
+          </div>
+          <ul class="space-y-3 text-base sm:text-lg font-bold text-[#364F3C]">
+            <li class="flex items-start gap-2.5">
+              <span class="text-sage mt-0.5">●</span>
+              <span><strong>從側邊給予支撐：</strong>把正前方空間完全留給長輩前傾。</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-sage mt-0.5">●</span>
+              <span><strong>誘發自然反射力量：</strong>順應人體起身生物力學，長輩自己就能出力。</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-sage mt-0.5">●</span>
+              <span><strong>善用移位腰帶：</strong>增加施力把手，照顧者挺直腰背也能輕鬆引導。</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 5: 正確人體工學 ==================== -->
+    <section id="s-ergonomics" data-title="照顧者的護身符：正確的人體工學" data-chapter="單元一：核心觀念" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-sageLight text-sage font-bold text-xs sm:text-sm">照顧者護身符</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">照顧者的護身符：正確的人體工學</h2>
+        <div class="inline-block mt-3 px-6 py-2 rounded-2xl bg-coral text-white font-black text-lg sm:text-2xl shadow-sm">
+          默念口訣：「用腿出力，不用腰！」
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="rounded-3xl bg-white p-6 storybook-border flex flex-col items-center text-center">
+          <div class="w-16 h-16 rounded-2xl bg-coralLight text-coral font-black text-3xl flex items-center justify-center mb-4">1</div>
+          <h3 class="text-2xl font-black text-ink mb-2">腰要直</h3>
+          <p class="text-base text-[#5C493E] leading-relaxed">
+            脊椎保持中立正中，<strong class="text-coral">絕對避免彎腰或扭轉</strong>，保護腰椎不受剪力傷害。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 storybook-border flex flex-col items-center text-center">
+          <div class="w-16 h-16 rounded-2xl bg-sageLight text-sage font-black text-3xl flex items-center justify-center mb-4">2</div>
+          <h3 class="text-2xl font-black text-ink mb-2">膝要彎</h3>
+          <p class="text-base text-[#5C493E] leading-relaxed">
+            蹲低重心，利用人體最強壯的<strong class="text-sage">大腿肌肉群</strong>來發力承重。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 storybook-border flex flex-col items-center text-center">
+          <div class="w-16 h-16 rounded-2xl bg-mustardLight text-mustard font-black text-3xl flex items-center justify-center mb-4">3</div>
+          <h3 class="text-2xl font-black text-ink mb-2">腳開</h3>
+          <p class="text-base text-[#5C493E] leading-relaxed">
+            雙腳打開（前後弓箭步或與肩同寬）站穩不離地，<strong class="text-mustard">盡量貼近被照顧者</strong>以縮短力臂。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 6: 黃金距離與重心前傾 ==================== -->
+    <section id="s-golden-distance" data-title="啟動省力魔法：黃金距離與重心前傾" data-chapter="單元一：核心觀念" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-mustardLight text-mustard font-bold text-xs sm:text-sm">生物力學關鍵</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">啟動省力魔法：黃金距離與重心前傾</h2>
+      </div>
+
+      <div class="flex flex-col md:flex-row items-center gap-6 sm:gap-8">
+        <!-- SVG 示意圖：鼻子超過膝蓋 -->
+        <div class="w-full md:w-5/12 bg-white rounded-3xl storybook-border p-4 flex flex-col items-center">
+          <svg viewBox="0 0 240 200" class="w-full max-w-[240px] h-auto">
+            <!-- 網格背景 -->
+            <rect width="240" height="200" rx="16" fill="#FAF6EE" />
+            <!-- 椅子 -->
+            <path d="M55 75 L55 165 M55 125 L110 125 L110 165" stroke="#8C6D53" stroke-width="6" stroke-linecap="round" fill="none" />
+            <!-- 長輩前傾姿勢 -->
+            <path d="M72 122 L115 122 L122 162" stroke="#5C493E" stroke-width="14" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <path d="M72 122 L102 72" stroke="#E07A5F" stroke-width="16" stroke-linecap="round" fill="none" />
+            <!-- 頭部與鼻子 -->
+            <circle cx="114" cy="56" r="16" fill="#FAD7C3" stroke="#4A3B32" stroke-width="2.5" />
+            <path d="M129 56 L136 60 L129 63" fill="#FAD7C3" stroke="#4A3B32" stroke-width="2" />
+            <!-- 垂直虛線：鼻子超過膝蓋 -->
+            <line x1="135" y1="25" x2="135" y2="175" stroke="#D9534F" stroke-width="2.5" stroke-dasharray="6 4" />
+            <!-- 箭頭弧線 -->
+            <path d="M75 45 Q105 30 128 45" fill="none" stroke="#6B9E78" stroke-width="3" stroke-dasharray="4 3" />
+            <text x="142" y="45" fill="#D9534F" font-size="12" font-weight="bold">鼻子超過膝蓋！</text>
+          </svg>
+          <span class="mt-2 px-4 py-1 rounded-full bg-coralLight text-coral font-black text-sm">
+            起身的秘密：鼻子必須超過膝蓋！
+          </span>
+        </div>
+
+        <!-- 右側三要點 -->
+        <div class="flex-1 space-y-4">
+          <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border">
+            <h3 class="text-lg sm:text-xl font-black text-coral mb-1">1. 留出前方「黃金距離」</h3>
+            <p class="text-base text-[#5C493E]">要讓長輩站起來，照顧者不可站在正前方擋路，必須給予前方足夠的前傾空間。</p>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border">
+            <h3 class="text-lg sm:text-xl font-black text-sage mb-1">2. 誘發「正支持反射」</h3>
+            <p class="text-base text-[#5C493E]">順勢引導長輩身體向前傾（鞠躬姿勢），大腦與下肢就會自然啟動站立反射。</p>
+          </div>
+
+          <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border">
+            <h3 class="text-lg sm:text-xl font-black text-mustard mb-1">3. 雙腳自然產生向上力量</h3>
+            <p class="text-base text-[#5C493E]">身體重心一旦充分向前移至腳掌上方，臀部自然離椅，雙腳就能輕鬆蹬直站起！</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 7: 起飛儀表板 ==================== -->
+    <section id="s-checklist" data-title="移位前的「起飛儀表板」：安全準備" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-skyLight text-skySoft font-bold text-xs sm:text-sm">安全第一關</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">移位前的「起飛儀表板」：給彼此最安心的準備</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-5">
+        <div class="p-5 rounded-3xl bg-coralLight/70 storybook-border">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-9 h-9 rounded-full bg-coral text-white font-black flex items-center justify-center">1</span>
+            <h3 class="text-xl font-black text-ink">評估能力</h3>
+          </div>
+          <p class="text-base text-[#5C493E]">判斷哪側是<strong>「健側」</strong>有力、哪側是<strong>「患側」</strong>無力，以及雙腿能否承重站立？</p>
+        </div>
+
+        <div class="p-5 rounded-3xl bg-mustardLight/70 storybook-border">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-9 h-9 rounded-full bg-mustard text-white font-black flex items-center justify-center">2</span>
+            <h3 class="text-xl font-black text-ink">環境淨空</h3>
+          </div>
+          <p class="text-base text-[#5C493E]">移除地面雜物與地毯，<strong>輪椅煞車絕對鎖定</strong>，雙邊腳踏板務必收起或撥開。</p>
+        </div>
+
+        <div class="p-5 rounded-3xl bg-sageLight/70 storybook-border">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-9 h-9 rounded-full bg-sage text-white font-black flex items-center justify-center">3</span>
+            <h3 class="text-xl font-black text-ink">管線防護</h3>
+          </div>
+          <p class="text-base text-[#5C493E]">下床前務必先<strong>「排空尿袋」</strong>並妥善固定管路，防止拉扯脫落或尿液回流感染。</p>
+        </div>
+
+        <div class="p-5 rounded-3xl bg-skyLight/70 storybook-border">
+          <div class="flex items-center gap-3 mb-2">
+            <span class="w-9 h-9 rounded-full bg-skySoft text-white font-black flex items-center justify-center">4</span>
+            <h3 class="text-xl font-black text-ink">溝通指令</h3>
+          </div>
+          <p class="text-base text-[#5C493E]">不趕時間，明確告知簡短口令：<strong>「我們數到三，一起向前傾站起來！」</strong></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 8: 安全移位黃金三部曲 ==================== -->
+    <section id="s-trilogy" data-title="安全移位黃金三部曲" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-mustardLight text-mustard font-bold text-xs sm:text-sm">標準作業流程</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">安全移位黃金三部曲</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+        <!-- Phase 1 -->
+        <div class="rounded-3xl bg-mustardLight/80 storybook-border p-5 flex flex-col">
+          <div class="px-3 py-1 rounded-xl bg-mustard text-white font-black text-sm w-fit mb-3">Phase 1：準備</div>
+          <ul class="space-y-3 text-base font-bold text-ink flex-1">
+            <li>• 給予簡單易懂的指令並示範（例如：「阿伯，數到三我們站起來喔！」）。</li>
+            <li>• 盡量讓病患發揮剩餘力量。</li>
+            <li>• 必要時繫上<strong>移位腰帶</strong>。</li>
+          </ul>
+        </div>
+
+        <!-- Phase 2 -->
+        <div class="rounded-3xl bg-coralLight/80 storybook-border p-5 flex flex-col">
+          <div class="px-3 py-1 rounded-xl bg-coral text-white font-black text-sm w-fit mb-3">Phase 2：定位</div>
+          <ul class="space-y-3 text-base font-bold text-ink flex-1">
+            <li>• 照顧者站立於<strong>可保護、防跌倒</strong>的位置（無力側）。</li>
+            <li>• 盡量靠近病患以節省力量。</li>
+            <li>• 確認病患<strong>雙腳確實踩穩地面</strong>。</li>
+          </ul>
+        </div>
+
+        <!-- Phase 3 -->
+        <div class="rounded-3xl bg-sageLight/80 storybook-border p-5 flex flex-col">
+          <div class="px-3 py-1 rounded-xl bg-sage text-white font-black text-sm w-fit mb-3">Phase 3：執行</div>
+          <ul class="space-y-3 text-base font-bold text-ink flex-1">
+            <li>• 動作平穩不突然，配合口令節奏。</li>
+            <li>• 重心放在足部，<strong>雙腳彎曲、背部打直</strong>。</li>
+            <li>• <span class="text-[#B52B27] underline">絕對不要扭轉身體！</span>（用腳步移動轉向）。</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 9: 偏癱移位神仙法則 ==================== -->
+    <section id="s-hemiplegia-rule" data-title="偏癱移位的「神仙法則」" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-coralLight text-coral font-bold text-xs sm:text-sm">中風／單側無力必學</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">偏癱移位的「神仙法則」</h2>
+        <div class="mt-3 inline-block px-6 py-2.5 rounded-2xl bg-mustard text-white font-black text-lg sm:text-2xl shadow-sm">
+          🏆 永遠讓「健側」帶動「患側」！
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+        <div class="rounded-3xl bg-white p-6 storybook-border">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl">👴</span>
+            <h3 class="text-xl sm:text-2xl font-black text-mustard">長輩的任務（主動發力）</h3>
+          </div>
+          <p class="text-base sm:text-lg leading-relaxed text-ink">
+            用<strong>有力的那一側（健側）</strong>去支撐床面、推動身體或抓握輪椅扶手，成為移動的主引擎。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 storybook-border">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="text-3xl">👩‍⚕️</span>
+            <h3 class="text-xl sm:text-2xl font-black text-sage">照顧者的任務（安全守護）</h3>
+          </div>
+          <p class="text-base sm:text-lg leading-relaxed text-ink">
+            <strong>永遠站在無力的那一側（患側或乏力側）</strong>提供支撐與保護，防止長輩向無力側傾倒跌倒。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 10: 床上翻身魔法口訣 ==================== -->
+    <section id="s-bed-roll" data-title="魔法口訣：床上輕鬆翻身" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-sageLight text-sage font-bold text-xs sm:text-sm">床上技巧 1</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">魔法口訣：輕鬆翻身（以左側偏癱為例）</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="rounded-3xl bg-coralLight/80 storybook-border p-6">
+          <span class="inline-block px-3 py-1 rounded-full bg-coral text-white font-bold text-sm mb-3">步驟 1：準備交疊</span>
+          <h3 class="text-2xl sm:text-3xl font-black text-ink mb-3">
+            「左腳勾右腳，左手握右手」
+          </h3>
+          <p class="text-base sm:text-lg text-[#5C493E] leading-relaxed">
+            先協助將無力的左腳跨放在有力的右腳上（或屈膝），並讓有力的右手握住無力的左手（雙手交握置於胸腹前），保護患側肢體不掉落。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-sageLight/80 storybook-border p-6">
+          <span class="inline-block px-3 py-1 rounded-full bg-sage text-white font-bold text-sm mb-3">步驟 2：順勢推動</span>
+          <h3 class="text-2xl sm:text-3xl font-black text-ink mb-3">
+            「右腳推左腳，右手握左手，順勢帶動翻身」
+          </h3>
+          <p class="text-base sm:text-lg text-[#5C493E] leading-relaxed">
+            轉頭看向要翻身的方向，利用有力的<strong>右腳帶動左腳</strong>、<strong>右手帶動左手</strong>，照顧者輕扶肩膀與骨盆順勢一推，就能輕鬆翻身！
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 11: 床上坐起槓桿原理 ==================== -->
+    <section id="s-bed-sit" data-title="善用槓桿：從床上輕鬆坐起" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-mustardLight text-mustard font-bold text-xs sm:text-sm">床上技巧 2</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">善用槓桿：從床上輕鬆坐起</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+        <div class="rounded-3xl bg-white p-6 storybook-border space-y-4">
+          <div class="flex items-start gap-3">
+            <span class="text-3xl">⚖️</span>
+            <div>
+              <h3 class="text-xl font-black text-sage mb-1">蹺蹺板槓桿原理</h3>
+              <p class="text-base sm:text-lg text-[#5C493E] leading-relaxed">
+                先側躺至床邊，讓長輩<strong>雙腿先移至床沿下垂</strong>，雙腿向下的重量就會像蹺蹺板一樣，自然帶動上半身輕鬆坐起！
+              </p>
+            </div>
+          </div>
+
+          <div class="p-4 rounded-2xl bg-[#FDE8E8] border-2 border-[#D9534F]">
+            <h4 class="font-black text-[#B52B27] text-lg mb-1">⚠️ 絕對禁忌動作</h4>
+            <p class="text-base font-bold text-[#5C3A38]">
+              照顧者應支撐<strong>肩膀與大腿後側</strong>，<u>絕對不可硬拉長輩的手臂或脖子</u>，以免造成肩關節半脫臼！
+            </p>
+          </div>
+        </div>
+
+        <!-- 步驟口訣卡 -->
+        <div class="rounded-3xl bg-sageLight/70 storybook-border p-6 space-y-3">
+          <h3 class="text-xl font-black text-ink mb-2">📋 床上坐起 3 步驟</h3>
+          <div class="p-3.5 rounded-2xl bg-white font-bold flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-sage text-white flex items-center justify-center shrink-0">1</span>
+            <span>先側躺靠近床緣（面向要下床的那一側）。</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-white font-bold flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-sage text-white flex items-center justify-center shrink-0">2</span>
+            <span>將雙腳移出床沿下垂，利用腿部重量帶動。</span>
+          </div>
+          <div class="p-3.5 rounded-2xl bg-white font-bold flex items-center gap-3">
+            <span class="w-8 h-8 rounded-full bg-sage text-white flex items-center justify-center shrink-0">3</span>
+            <span>健側手肘撐床推起，照顧者托住肩膀與大腿協助坐穩。</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 12: 床位移動左右側對照 ==================== -->
+    <section id="s-hemi-side" data-title="床位移動：偏癱健側帶動患側口訣" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-skyLight text-skySoft font-bold text-xs sm:text-sm">左右側情境實戰</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">床位移動：偏癱健側帶動患側口訣</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 情境 A：左側乏力 -->
+        <div class="rounded-3xl bg-white p-6 storybook-border">
+          <div class="inline-block px-4 py-1.5 rounded-full bg-sageLight text-sage font-black text-base mb-4">
+            情境 A：以「左側乏力」為例
+          </div>
+          <ul class="space-y-3 text-base sm:text-lg font-bold text-ink">
+            <li class="flex items-start gap-2.5">
+              <span class="text-sage">✔</span>
+              <span>輪椅放在<strong>右側（有力的健側）</strong>！</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-sage">✔</span>
+              <span>讓長輩用<strong>有力的右手</strong>扶住輪椅遠端扶手。</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-sage">✔</span>
+              <span>照顧者站在無力的左側協助支撐，作為安全樞紐，讓長輩順勢轉身坐下。</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- 情境 B：右側乏力 -->
+        <div class="rounded-3xl bg-white p-6 storybook-border">
+          <div class="inline-block px-4 py-1.5 rounded-full bg-mustardLight text-mustard font-black text-base mb-4">
+            情境 B：以「右側乏力」為例
+          </div>
+          <ul class="space-y-3 text-base sm:text-lg font-bold text-ink">
+            <li class="flex items-start gap-2.5">
+              <span class="text-mustard">✔</span>
+              <span>輪椅停在床的<strong>左側（長輩有力的健側）</strong>！</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-mustard">✔</span>
+              <span>長輩用<strong>有力的左手</strong>撐住床面或輪椅扶手。</span>
+            </li>
+            <li class="flex items-start gap-2.5">
+              <span class="text-mustard">✔</span>
+              <span>照顧者從旁護住無力的右側，平穩轉移。</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 13: 互動移位小測驗決策樹 (第 17 頁重點功能) ==================== -->
+    <section id="s-quiz" data-title="互動小測驗：怎麼選移位方法？" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-4">
+        <span class="px-3 py-1 rounded-full bg-coral text-white font-bold text-xs sm:text-sm animate-pulse">🎯 現場互動決策樹</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">怎麼選方法？超實用移位小測驗</h2>
+        <p class="text-sm sm:text-base text-[#6E5849] mt-1">請根據長輩目前的身體狀況點擊下方按鈕，系統將為您配對最適合的移位方式！</p>
+      </div>
+
+      <!-- 選擇路徑麵包屑 -->
+      <div id="quiz-breadcrumbs" class="flex flex-wrap items-center justify-center gap-2 min-h-[36px] mb-4">
+        <span class="px-3 py-1 rounded-full bg-[#EFE5D1] text-xs font-bold text-[#6E5849]">起點：評估長輩下肢承重能力</span>
+      </div>
+
+      <!-- 測驗互動主卡片 -->
+      <div id="quiz-container" class="w-full max-w-3xl mx-auto bg-white rounded-3xl storybook-border p-6 sm:p-8 shadow-sm transition-all">
+        <!-- 動態內容將由 JavaScript 渲染 -->
+      </div>
+
+      <!-- 底部重設與總覽提示 -->
+      <div class="mt-5 flex items-center justify-center gap-4">
+        <button onclick="resetQuiz()" class="px-5 py-2 rounded-full bg-[#EFE5D1] hover:bg-[#E2D3B7] text-ink font-bold text-sm transition cursor-pointer flex items-center gap-1.5">
+          <span>🔄 重新開始測驗</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 14: 實戰篇 A 病床轉輪椅 - 完美佈陣 ==================== -->
+    <section id="s-bed-to-chair-setup" data-title="實戰篇 A：病床轉輪椅 - 完美佈陣" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-coralLight text-coral font-bold text-xs sm:text-sm">實戰篇 A（1/2）</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">病床轉輪椅：完美佈陣</h2>
+        <p class="text-base font-bold text-coral mt-1">擺好輪椅，轉位就成功了一半！</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+        <!-- 左側俯視 SVG 角度示意圖 -->
+        <div class="md:col-span-5 bg-white rounded-3xl storybook-border p-4 flex flex-col items-center">
+          <svg viewBox="0 0 240 210" class="w-full max-w-[230px] h-auto">
+            <rect width="240" height="210" rx="14" fill="#FAF6EE" />
+            <!-- 病床 -->
+            <rect x="25" y="20" width="85" height="170" rx="8" fill="#FFFDF9" stroke="#6E5849" stroke-width="2.5" />
+            <rect x="40" y="30" width="55" height="24" rx="5" fill="#FDECE7" stroke="#6E5849" stroke-width="2" />
+            <text x="67" y="110" text-anchor="middle" fill="#6B9E78" font-size="13" font-weight="bold">健側（有力側）</text>
+            <!-- 30~45度角參考線 -->
+            <line x1="115" y1="20" x2="115" y2="140" stroke="#9E8574" stroke-width="1.5" stroke-dasharray="4 4" />
+            <path d="M115 70 A 45 45 0 0 1 148 85" fill="none" stroke="#E07A5F" stroke-width="2.5" />
+            <text x="136" y="65" fill="#E07A5F" font-size="12" font-weight="bold">30°–45°</text>
+            <!-- 輪椅俯視圖（旋轉 35 度） -->
+            <g transform="translate(155, 130) rotate(-35)">
+              <rect x="-24" y="-24" width="48" height="48" rx="6" fill="#F9E4A7" stroke="#4A3B32" stroke-width="2.5" />
+              <rect x="-26" y="16" width="52" height="8" rx="3" fill="#E07A5F" stroke="#4A3B32" stroke-width="2" />
+              <text x="0" y="3" text-anchor="middle" fill="#4A3B32" font-size="11" font-weight="bold">輪椅</text>
+            </g>
+          </svg>
+          <span class="text-xs font-bold text-[#7D6657] mt-2">⚠️ 如果一開始放錯邊，後面的移位就會變成災難喔！</span>
+        </div>
+
+        <!-- 右側三要點與互動防呆勾選 -->
+        <div class="md:col-span-7 space-y-4">
+          <div class="p-4 rounded-2xl bg-white storybook-border">
+            <p class="text-base sm:text-lg font-bold">
+              <span class="text-coral font-black">1. 位置：</span>務必將輪椅放在長輩的<strong>「健側」（有力的一邊）</strong>。
+            </p>
+          </div>
+          <div class="p-4 rounded-2xl bg-white storybook-border">
+            <p class="text-base sm:text-lg font-bold">
+              <span class="text-sage font-black">2. 角度：</span>輪椅與床呈 <strong>30–45 度角</strong>（或平行緊靠床邊）。
+            </p>
+          </div>
+
+          <!-- 互動防呆檢查清單 -->
+          <div class="p-4 rounded-2xl bg-mustardLight/80 storybook-border">
+            <p class="font-black text-ink mb-2.5 flex items-center justify-between">
+              <span>3. 必做防呆設定（點擊確認打勾）：</span>
+              <span id="foolproof-status" class="text-xs px-2.5 py-0.5 rounded-full bg-white text-coral">尚未完成</span>
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm font-bold">
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white cursor-pointer border border-[#D8C5A8]">
+                <input type="checkbox" class="foolproof-cb w-4 h-4 accent-sage" onchange="checkFoolproof()" />
+                <span>🔒 鎖上雙邊煞車</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white cursor-pointer border border-[#D8C5A8]">
+                <input type="checkbox" class="foolproof-cb w-4 h-4 accent-sage" onchange="checkFoolproof()" />
+                <span>🦶 收起腳踏板</span>
+              </label>
+              <label class="flex items-center gap-2 p-2.5 rounded-xl bg-white cursor-pointer border border-[#D8C5A8]">
+                <input type="checkbox" class="foolproof-cb w-4 h-4 accent-sage" onchange="checkFoolproof()" />
+                <span>🔓 掀開靠床扶手</span>
+              </label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 15: 實戰篇 A 病床轉輪椅 - 華麗轉身 ==================== -->
+    <section id="s-bed-to-chair-turn" data-title="實戰篇 A：病床轉輪椅 - 華麗轉身" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-coralLight text-coral font-bold text-xs sm:text-sm">實戰篇 A（2/2）</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">病床轉輪椅：華麗轉身</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="rounded-3xl bg-white p-6 storybook-border">
+          <div class="w-11 h-11 rounded-2xl bg-coral text-white font-black text-xl flex items-center justify-center mb-3">1</div>
+          <h3 class="text-xl font-black text-ink mb-2">準備轉位：膝蓋對抗</h3>
+          <p class="text-base text-[#5C493E] leading-relaxed">
+            照顧者站在<strong>患側</strong>，用自己的膝蓋輕抵住長輩無力側的膝蓋（防止軟腳跪下），雙手抓穩移位腰帶。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 storybook-border">
+          <div class="w-11 h-11 rounded-2xl bg-mustard text-white font-black text-xl flex items-center justify-center mb-3">2</div>
+          <h3 class="text-xl font-black text-ink mb-2">啟動黃金距離魔法</h3>
+          <p class="text-base text-[#5C493E] leading-relaxed">
+            請長輩健側手扶住輪椅<strong>「遠端」扶手</strong>！伸手去抓遠端扶手的動作，能自然誘導身體前傾（鼻子超過膝蓋）。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-6 storybook-border">
+          <div class="w-11 h-11 rounded-2xl bg-sage text-white font-black text-xl flex items-center justify-center mb-3">3</div>
+          <h3 class="text-xl font-black text-ink mb-2">華麗轉身緩慢坐下</h3>
+          <p class="text-base text-[#5C493E] leading-relaxed">
+            數到三站起後，以前腳掌為軸心，照顧者與長輩一起畫一個小半圓，確認臀部對準椅面再緩慢坐下。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 16: 實戰篇 B 輪椅轉病床 ==================== -->
+    <section id="s-chair-to-bed" data-title="實戰篇 B：輪椅轉病床 - 安全降落與微調" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-sageLight text-sage font-bold text-xs sm:text-sm">實戰篇 B</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">輪椅轉病床：安全降落與微調</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="rounded-3xl bg-white p-5 storybook-border">
+          <span class="px-3 py-1 rounded-full bg-mustardLight text-mustard font-black text-xs">步驟 1</span>
+          <h3 class="text-xl font-black mt-2 mb-2">往前挪坐前 1/3</h3>
+          <p class="text-base text-[#5C493E]">
+            輪椅以健側靠近床邊並鎖定煞車（床面可調得比輪椅低一點點，創造下坡優勢）。長輩臀部先左右輪流挪移至<strong>輪椅前 1/3 處</strong>。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-white p-5 storybook-border">
+          <span class="px-3 py-1 rounded-full bg-sageLight text-sage font-black text-xs">步驟 2</span>
+          <h3 class="text-xl font-black mt-2 mb-2">健側手撐床轉身</h3>
+          <p class="text-base text-[#5C493E]">
+            健側手先扶住床緣，健側腳發力站起，以腳尖為軸心轉身坐上床（照顧者站在無力側保護）。
+          </p>
+        </div>
+
+        <div class="rounded-3xl bg-coralLight/80 p-5 storybook-border">
+          <span class="px-3 py-1 rounded-full bg-coral text-white font-black text-xs">步驟 3：坐不夠深怎麼辦？</span>
+          <h3 class="text-xl font-black mt-2 mb-2">左右輪流挪移臀部！</h3>
+          <p class="text-base text-ink font-bold">
+            利用重心左右轉移（左傾抬右臀、右傾抬左臀），一步步往床內坐深。照顧者站在無力側隨時支撐，防止長輩向後倒。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 17: 實戰篇 C 車輛上車技巧 ==================== -->
+    <section id="s-car-in" data-title="實戰篇 C：車輛上車技巧" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-skyLight text-skySoft font-bold text-xs sm:text-sm">實戰篇 C（1/2）</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">車輛上車技巧：外出旅遊不卡關</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-skySoft text-white font-black flex items-center justify-center shrink-0">1</span>
+          <p class="text-base sm:text-lg font-bold">輪椅推至車門處（<strong>前座車門角度通常較大</strong>，更有利轉位），煞車固定，收踏板雙腳落地。</p>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-skySoft text-white font-black flex items-center justify-center shrink-0">2</span>
+          <p class="text-base sm:text-lg font-bold">照顧者採<strong>「前後站姿」</strong>，抓緊長輩的移位腰帶順勢引導站起（注意保護頭部勿撞門框）。</p>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-skySoft text-white font-black flex items-center justify-center shrink-0">3</span>
+          <p class="text-base sm:text-lg font-bold">站穩後，照顧者的腳抵住長輩膝蓋作支撐，轉身讓臀部先坐上汽車座椅。</p>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-skySoft text-white font-black flex items-center justify-center shrink-0">4</span>
+          <p class="text-base sm:text-lg font-bold"><strong>先進一隻腳，再進下一隻腳</strong>，調整坐姿後最後繫上安全帶！</p>
+        </div>
+      </div>
+
+      <div class="mt-5 p-3.5 rounded-2xl bg-mustardLight storybook-border text-center font-black text-base sm:text-lg">
+        💡 強烈建議使用「移位腰帶」，取代徒手死抱，在車門窄小空間更安全省力！
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 18: 實戰篇 C 車輛下車技巧 ==================== -->
+    <section id="s-car-out" data-title="實戰篇 C：車輛下車技巧" data-chapter="單元二：實戰操作" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-skyLight text-skySoft font-bold text-xs sm:text-sm">實戰篇 C（2/2）</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">車輛下車技巧：平安抵達細節</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="p-4 sm:p-5 rounded-2xl bg-coralLight/70 storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-coral text-white font-black flex items-center justify-center shrink-0">1</span>
+          <p class="text-base sm:text-lg font-bold">先將<strong>雙腳完全移出車外，踩穩地面</strong>。<span class="text-[#B52B27] underline">千萬不要在車內硬扭身體！</span></p>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-sage text-white font-black flex items-center justify-center shrink-0">2</span>
+          <p class="text-base sm:text-lg font-bold">長輩雙手扶在照顧者肩上（或車門框穩固處），照顧者雙手抓緊移位腰帶。</p>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-sage text-white font-black flex items-center justify-center shrink-0">3</span>
+          <p class="text-base sm:text-lg font-bold">引導身體前傾（鼻子超過膝蓋），照顧者用腿發力引導站起。</p>
+        </div>
+
+        <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border flex items-start gap-3">
+          <span class="w-9 h-9 rounded-full bg-sage text-white font-black flex items-center justify-center shrink-0">4</span>
+          <p class="text-base sm:text-lg font-bold">小碎步轉身，安穩坐入<strong>已經在一旁固定好煞車的輪椅</strong>中。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 19: 輪椅坐姿下滑調整 ==================== -->
+    <section id="s-wheelchair-slide" data-title="輪椅坐姿調整：下滑時怎麼辦？" data-chapter="單元三：輔具與防護" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-mustardLight text-mustard font-bold text-xs sm:text-sm">日常高頻率情境</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">輪椅坐姿調整：下滑時怎麼辦？</h2>
+        <div class="mt-2 inline-block px-5 py-1.5 rounded-full bg-coral text-white font-black text-lg">
+          口訣：「鼻子超過膝蓋！」
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div class="p-5 rounded-3xl bg-white storybook-border">
+          <span class="w-10 h-10 rounded-full bg-sage text-white font-black text-lg flex items-center justify-center mb-3">1</span>
+          <h3 class="text-xl font-black mb-2">先確認煞車已鎖住</h3>
+          <p class="text-base text-[#5C493E]">調整坐姿前，第一動作永遠是檢查輪椅雙邊煞車是否完全鎖緊，腳踏板掀開讓雙腳踩地。</p>
+        </div>
+
+        <div class="p-5 rounded-3xl bg-white storybook-border">
+          <span class="w-10 h-10 rounded-full bg-mustard text-white font-black text-lg flex items-center justify-center mb-3">2</span>
+          <h3 class="text-xl font-black mb-2">頭與背往前傾</h3>
+          <p class="text-base text-[#5C493E]">請長輩雙腳踩穩地面，上半身大幅度向前傾，讓<strong>鼻子超過膝蓋</strong>，把臀部重心往前帶。</p>
+        </div>
+
+        <div class="p-5 rounded-3xl bg-white storybook-border">
+          <span class="w-10 h-10 rounded-full bg-skySoft text-white font-black text-lg flex items-center justify-center mb-3">3</span>
+          <h3 class="text-xl font-black mb-2">雙手撐扶手往後挪</h3>
+          <p class="text-base text-[#5C493E]">雙手撐住輪椅扶手，順勢把骨盆往椅背深處挪動坐正。</p>
+        </div>
+      </div>
+
+      <div class="mt-5 p-4 rounded-2xl bg-[#FDE8E8] border-2 border-[#D9534F] text-center font-black text-base sm:text-lg text-[#B52B27]">
+        🚫 照顧者僅從旁口頭引導或前方協助前傾，絕對不要從長輩「後方腋下硬拉」，極易造成雙方受傷！
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 20: 低摩擦力輔具 ==================== -->
+    <section id="s-low-friction" data-title="零承重的秘密：低摩擦力物理魔法" data-chapter="單元三：輔具與防護" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-6">
+        <span class="px-3 py-1 rounded-full bg-sageLight text-sage font-bold text-xs sm:text-sm">物理魔法道具</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">零承重的秘密：解開「低摩擦力」的物理魔法</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- 移位滑板 -->
+        <div class="rounded-3xl bg-coralLight/70 storybook-border p-6">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-2xl font-black text-ink">移位滑板（Slide Board）</h3>
+            <span class="text-3xl">🛹</span>
+          </div>
+          <div class="inline-block px-3 py-1 rounded-full bg-mustardLight text-mustard font-black text-sm mb-3">
+            「搭建一座平滑的橋梁」
+          </div>
+          <p class="text-base sm:text-lg text-[#5C493E] leading-relaxed">
+            適用於下肢無力但坐姿穩定者。將滑板架在床與輪椅之間（<strong>目的地平面需略低於所在位置</strong>），讓長輩利用自身殘存上肢力量，像溜滑梯一樣輕鬆「滑行」過去。
+          </p>
+        </div>
+
+        <!-- 移位滑墊 -->
+        <div class="rounded-3xl bg-skyLight/70 storybook-border p-6">
+          <div class="flex items-center justify-between mb-3">
+            <h3 class="text-2xl font-black text-ink">移位滑墊（Slide Sheet）</h3>
+            <span class="text-3xl">☁️</span>
+          </div>
+          <div class="inline-block px-3 py-1 rounded-full bg-white text-skySoft font-black text-sm mb-3">
+            「消除阻力，如在雲端平移」
+          </div>
+          <p class="text-base sm:text-lg text-[#5C493E] leading-relaxed">
+            適用於床上翻身、向上挪移或推床與病床<strong>同等高度水平轉移</strong>。超低摩擦係數布料搭配提拉帶穿過膝窩與腰部，毫不費力就能平移。
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 21: 溫馨複習與關鍵防護儀表板 ==================== -->
+    <section id="s-review-ox" data-title="溫馨複習與關鍵防護儀表板" data-chapter="單元三：輔具與防護" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-4">
+        <span class="px-3 py-1 rounded-full bg-sageLight text-sage font-bold text-xs sm:text-sm">守護彼此的好習慣</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">溫馨複習與關鍵防護儀表板</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+        <!-- O 這樣做 -->
+        <div class="rounded-3xl bg-sageLight/85 border-2 border-sage p-5">
+          <h3 class="text-xl font-black text-[#3D6E49] mb-3 flex items-center gap-2">
+            <span>😊 請盡量這樣做（O）</span>
+          </h3>
+          <ul class="space-y-2.5 text-base font-bold text-ink">
+            <li>✔ 抓緊褲頭或<strong>移位腰帶</strong>施力</li>
+            <li>✔ 每次移位前<strong>必檢查輪椅煞車</strong></li>
+            <li>✔ 以<strong>「健側腳」</strong>為旋轉軸心</li>
+            <li>✔ 全程口頭引導陪伴，善用移位輔具</li>
+          </ul>
+        </div>
+
+        <!-- X 避免這樣做 -->
+        <div class="rounded-3xl bg-[#FDE8E8] border-2 border-[#D9534F] p-5">
+          <h3 class="text-xl font-black text-[#B52B27] mb-3 flex items-center gap-2">
+            <span>😰 請避免這樣做（X）</span>
+          </h3>
+          <ul class="space-y-2.5 text-base font-bold text-ink">
+            <li>✘ 拉扯長輩的手臂、肩膀或脖子（防脫臼）</li>
+            <li>✘ 忘記鎖輪椅煞車或忘記收腳踏板</li>
+            <li>✘ 轉身時雙腳交叉（極易絆倒）</li>
+            <li>✘ 勉強自己一個人硬抱</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- 照顧者承諾 -->
+      <div class="mt-4 p-4 rounded-2xl bg-mustardLight/80 storybook-border flex flex-wrap items-center justify-around gap-3 text-sm sm:text-base font-black text-ink">
+        <span>🛡️ 嚴禁拉扯患側</span>
+        <span>🤝 左腳勾右腳，左手握右手</span>
+        <span>⏳ 永遠給予充裕時間，不催促</span>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 22: 什麼時候該停下來？ ==================== -->
+    <section id="s-red-flags" data-title="照顧自己也很重要：什麼時候該停下來？" data-chapter="單元三：輔具與防護" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <div class="text-center mb-5">
+        <span class="px-3 py-1 rounded-full bg-coralLight text-coral font-bold text-xs sm:text-sm">安全紅綠燈</span>
+        <h2 class="text-2xl sm:text-4xl font-black mt-2">照顧自己也很重要：什麼時候該停下來？</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- 紅燈 -->
+        <div class="rounded-3xl bg-[#FDE8E8] border-2 border-[#D9534F] overflow-hidden flex flex-col">
+          <div class="bg-[#D9534F] text-white font-black text-lg p-3.5 text-center">
+            🚨 馬上停止，撥打 119
+          </div>
+          <ul class="p-5 space-y-2.5 text-base font-bold text-[#5C3A38] flex-1">
+            <li>• 胸痛、喘不過氣</li>
+            <li>• 突然單側手腳無力、說話不清</li>
+            <li>• 意識不清或昏厥</li>
+            <li>• 跌倒後頭部撞擊或劇痛</li>
+          </ul>
+        </div>
+
+        <!-- 黃燈 -->
+        <div class="rounded-3xl bg-mustardLight/80 border-2 border-mustard overflow-hidden flex flex-col">
+          <div class="bg-mustard text-white font-black text-lg p-3.5 text-center">
+            ⚠️ 先坐下或躺回，找醫師
+          </div>
+          <ul class="p-5 space-y-2.5 text-base font-bold text-ink flex-1">
+            <li>• 一站起就頭暈眼黑（姿勢性低血壓）</li>
+            <li>• 近期轉位能力明顯變差</li>
+            <li>• 轉位時某處關節疼痛加劇</li>
+          </ul>
+        </div>
+
+        <!-- 綠燈 -->
+        <div class="rounded-3xl bg-sageLight/80 border-2 border-sage overflow-hidden flex flex-col">
+          <div class="bg-sage text-white font-black text-lg p-3.5 text-center">
+            💚 尋求專業評估（找治療師）
+          </div>
+          <ul class="p-5 space-y-2.5 text-base font-bold text-ink flex-1">
+            <li>• 照顧者持續腰痛、肩頸痛未好轉</li>
+            <li>• 長輩抗拒、躁動無法理解口令</li>
+            <li>• 覺得快撐不下去，需要申請喘息服務時</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 23: 長照輔具補助攻略 ==================== -->
+    <section id="s-subsidy" data-title="長照輔具補助攻略與魔法道具庫" data-chapter="單元三：輔具與防護" class="slide-section w-full flex-col bg-cream/95 storybook-border rounded-3xl p-5 sm:p-8 shadow-card">
+      <div class="text-center mb-4">
+        <span class="px-3 py-1 rounded-full bg-mustardLight text-mustard font-bold text-xs sm:text-sm">政府資源別錯過（撥打 1966）</span>
+        <h2 class="text-2xl sm:text-3xl font-black mt-1">3 步驟獲取「長照裝備補助」與道具上限一覽</h2>
+      </div>
+
+      <!-- 3 步驟橫列 -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4 text-sm sm:text-base">
+        <div class="p-3.5 rounded-2xl bg-white storybook-border">
+          <span class="font-black text-coral">Step 1 找專家：</span>經照管專員評估，確認長輩符合長照資格。
+        </div>
+        <div class="p-3.5 rounded-2xl bg-white storybook-border">
+          <span class="font-black text-sage">Step 2 確認額度：</span>輔具及無障礙改善額度<strong>每 3 年最高 4 萬元</strong>！
+        </div>
+        <div class="p-3.5 rounded-2xl bg-white storybook-border">
+          <span class="font-black text-mustard">Step 3 看身分付費：</span>一般戶自付 30%、中低收 10%、低收入戶 0%（全額補助）。
+        </div>
+      </div>
+
+      <!-- 輔具補助代碼卡片牆 -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
+        <div class="p-3.5 rounded-2xl bg-sageLight/80 border border-sage">
+          <div class="flex justify-between items-center font-black text-ink mb-1">
+            <span>移位腰帶（ED01）</span>
+            <span class="px-2 py-0.5 rounded-full bg-white text-sage text-xs">上限 1,500元/3年</span>
+          </div>
+          <p class="text-xs text-[#5C493E]">增加施力把手，安全好抓握。</p>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-coralLight/80 border border-coral">
+          <div class="flex justify-between items-center font-black text-ink mb-1">
+            <span>移位板/轉盤（ED02/06）</span>
+            <span class="px-2 py-0.5 rounded-full bg-white text-coral text-xs">上限 2,000元</span>
+          </div>
+          <p class="text-xs text-[#5C493E]">坐姿滑動、轉向的神隊友。</p>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-skyLight/80 border border-skySoft">
+          <div class="flex justify-between items-center font-black text-ink mb-1">
+            <span>移位滑墊（ED04/05）</span>
+            <span class="px-2 py-0.5 rounded-full bg-white text-skySoft text-xs">上限 3,000–8,000元</span>
+          </div>
+          <p class="text-xs text-[#5C493E]">消除摩擦力，床上平移神器。</p>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-mustardLight/80 border border-mustard">
+          <div class="flex justify-between items-center font-black text-ink mb-1">
+            <span>輪椅附加功能（EC04）</span>
+            <span class="px-2 py-0.5 rounded-full bg-white text-mustard text-xs">上限 5,000元</span>
+          </div>
+          <p class="text-xs text-[#5C493E]">扶手/腳靠可拆，移位零死角。</p>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-sageLight/80 border border-sage">
+          <div class="flex justify-between items-center font-black text-ink mb-1">
+            <span>人力移位吊帶（ED03）</span>
+            <span class="px-2 py-0.5 rounded-full bg-white text-sage text-xs">上限 4,000元/3年</span>
+          </div>
+          <p class="text-xs text-[#5C493E]">需多人操作的省力搬運帶，坐臥皆宜。</p>
+        </div>
+
+        <div class="p-3.5 rounded-2xl bg-coralLight/80 border border-coral">
+          <div class="flex justify-between items-center font-black text-ink mb-1">
+            <span>移位機+吊帶（ED07+08）</span>
+            <span class="px-2 py-0.5 rounded-full bg-white text-coral text-xs">購置 40,000元</span>
+          </div>
+          <p class="text-xs text-[#5C493E]">可租用 2,000/月；吊帶上限 6,000元，完全解放腰部！</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== SLIDE 24: 總結與 Q&A ==================== -->
+    <section id="s-qa" data-title="總結：精準移位方程式 & Q&A" data-chapter="總結與交流" class="slide-section w-full flex-col items-center justify-center text-center bg-cream/95 storybook-border rounded-3xl p-6 sm:p-10 shadow-card">
+      <span class="px-4 py-1 rounded-full bg-sageLight text-sage font-bold text-xs sm:text-sm mb-3">總結：為了走得更長遠</span>
+      <h2 class="text-2xl sm:text-4xl font-black text-ink mb-6">精準移位方程式</h2>
+
+      <!-- 三大元素方程式 -->
+      <div class="flex flex-col md:flex-row items-center justify-center gap-3 sm:gap-4 w-full max-w-4xl mb-6">
+        <div class="flex-1 w-full p-4 rounded-2xl bg-coralLight storybook-border">
+          <div class="text-2xl mb-1">🧍</div>
+          <div class="font-black text-lg text-ink">照顧者正確姿勢</div>
+          <div class="text-xs sm:text-sm text-[#6E5849]">用腿不用腰</div>
+        </div>
+        <div class="text-2xl font-black text-mustard">＋</div>
+        <div class="flex-1 w-full p-4 rounded-2xl bg-mustardLight storybook-border">
+          <div class="text-2xl mb-1">👃</div>
+          <div class="font-black text-lg text-ink">黃金物理距離</div>
+          <div class="text-xs sm:text-sm text-[#6E5849]">引導重心向前</div>
+        </div>
+        <div class="text-2xl font-black text-mustard">＋</div>
+        <div class="flex-1 w-full p-4 rounded-2xl bg-sageLight storybook-border">
+          <div class="text-2xl mb-1">🧰</div>
+          <div class="font-black text-lg text-ink">適當輔具介入</div>
+          <div class="text-xs sm:text-sm text-[#6E5849]">滑板／腰帶／移位機</div>
+        </div>
+      </div>
+
+      <div class="p-4 sm:p-5 rounded-2xl bg-white storybook-border max-w-3xl mx-auto mb-6">
+        <p class="text-base sm:text-lg font-bold text-ink leading-relaxed">
+          將體力消耗降至最低，徹底告別職業傷害。<br />
+          讓照護不再是單向的勞力搬運，而是幫助長輩在每一次移動中，找回自我控制的尊嚴。
+        </p>
+      </div>
+
+      <!-- Q&A 互動框 -->
+      <div class="flex flex-col sm:flex-row items-center justify-center gap-4 bg-skyLight/70 px-6 py-4 rounded-3xl storybook-border">
+        <div class="text-4xl sm:text-5xl font-black text-skySoft tracking-wider">Q &amp; A</div>
+        <div class="text-left">
+          <p class="font-black text-lg text-ink">感謝聆聽！歡迎現場提問與實作交流 👍👍</p>
+          <p class="text-xs sm:text-sm text-[#5C493E]">主講人：青松健康營運部經理 陳仁彰 職能治療師</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- 底部控制列 -->
+  <footer class="w-full px-4 py-3 max-w-6xl mx-auto flex items-center justify-between gap-2 z-40">
+    <button id="btn-prev" onclick="prevSlide()" class="px-4 py-2.5 rounded-2xl bg-white storybook-border font-bold text-sm sm:text-base shadow-pill hover:bg-paper disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer flex items-center gap-1.5">
+      <span>◀</span>
+      <span class="hidden sm:inline">上一頁</span>
+    </button>
+
+    <div class="flex items-center gap-3">
+      <span id="slide-counter" class="px-4 py-1.5 rounded-full bg-white/90 storybook-border font-black text-sm text-ink">
+        1 / 24
+      </span>
+      <button onclick="toggleFullscreen()" title="全螢幕投影" class="p-2.5 rounded-2xl bg-white storybook-border hover:bg-paper shadow-pill transition cursor-pointer">
+        <svg class="w-5 h-5 text-ink" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
+        </svg>
+      </button>
+    </div>
+
+    <button id="btn-next" onclick="nextSlide()" class="px-4 py-2.5 rounded-2xl bg-coral text-white storybook-border font-bold text-sm sm:text-base shadow-pill hover:brightness-105 disabled:opacity-40 disabled:cursor-not-allowed transition cursor-pointer flex items-center gap-1.5">
+      <span class="hidden sm:inline">下一頁</span>
+      <span>▶</span>
+    </button>
+  </footer>
+
+  <!-- 章節目錄抽屜彈窗 (Modal) -->
+  <div id="toc-modal" class="fixed inset-0 bg-black/50 backdrop-blur-xs z-50 hidden items-center justify-center p-4" onclick="if(event.target === this) toggleToc(false)">
+    <div class="bg-cream storybook-border rounded-3xl w-full max-w-2xl max-h-[82vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="px-6 py-4 bg-paper border-b-2 border-[#E3D5BE] flex items-center justify-between">
+        <h3 class="text-xl font-black text-ink">📖 簡報章節目錄（點擊快速跳轉）</h3>
+        <button onclick="toggleToc(false)" class="w-8 h-8 rounded-full bg-white storybook-border font-black text-ink hover:bg-coralLight transition cursor-pointer">✕</button>
+      </div>
+      <div id="toc-list" class="p-4 sm:p-6 overflow-y-auto space-y-2">
+        <!-- 由 JS 動態生成 24 頁目錄 -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== JavaScript 核心邏輯 ==================== -->
+  <script>
+    const slides = Array.from(document.querySelectorAll('.slide-section'));
+    let currentIndex = 0;
+
+    // 初始化目錄清單
+    function buildToc() {
+      const tocList = document.getElementById('toc-list');
+      tocList.innerHTML = '';
+      slides.forEach((slide, idx) => {
+        const title = slide.getAttribute('data-title') || `第 ${idx + 1} 頁`;
+        const chapter = slide.getAttribute('data-chapter') || '';
+        const btn = document.createElement('button');
+        btn.className = `w-full text-left px-4 py-3 rounded-2xl border-2 transition flex items-center justify-between gap-3 cursor-pointer ${
+          idx === currentIndex
+            ? 'bg-coral text-white border-[#4A3B32] font-black'
+            : 'bg-white hover:bg-mustardLight/60 border-[#E3D5BE] text-ink font-bold'
+        }`;
+        btn.innerHTML = `
+          <div class="flex items-center gap-3">
+            <span class="w-7 h-7 rounded-full ${idx === currentIndex ? 'bg-white text-coral' : 'bg-paper text-ink'} text-xs font-black flex items-center justify-center shrink-0">${idx + 1}</span>
+            <span>${title}</span>
+          </div>
+          <span class="text-xs opacity-80 shrink-0">${chapter}</span>
+        `;
+        btn.onclick = () => {
+          goToSlide(idx);
+          toggleToc(false);
+        };
+        tocList.appendChild(btn);
+      });
+    }
+
+    // 切換到指定索引的投影片
+    function goToSlide(index, updateHash = true) {
+      if (index < 0 || index >= slides.length) return;
+      slides[currentIndex].classList.remove('active');
+      currentIndex = index;
+      const activeSlide = slides[currentIndex];
+      activeSlide.classList.add('active');
+
+      // 更新頁碼與進度條
+      document.getElementById('slide-counter').textContent = `${currentIndex + 1} / ${slides.length}`;
+      const progress = ((currentIndex + 1) / slides.length) * 100;
+      document.getElementById('progress-bar').style.width = `${progress}%`;
+
+      // 更新章節徽章
+      const chapter = activeSlide.getAttribute('data-chapter');
+      if (chapter) {
+        document.getElementById('chapter-badge').textContent = chapter;
+      }
+
+      // 更新上下頁按鈕狀態
+      document.getElementById('btn-prev').disabled = currentIndex === 0;
+      document.getElementById('btn-next').disabled = currentIndex === slides.length - 1;
+
+      // 同步網址 Hash（支援直接分享特定頁面網址，例如 #s-quiz）
+      if (updateHash && activeSlide.id) {
+        history.replaceState(null, '', `#${activeSlide.id}`);
+      }
+
+      // 捲回頂部
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function goToSlideById(id) {
+      const idx = slides.findIndex(s => s.id === id);
+      if (idx !== -1) goToSlide(idx);
+    }
+
+    function nextSlide() {
+      if (currentIndex < slides.length - 1) goToSlide(currentIndex + 1);
+    }
+
+    function prevSlide() {
+      if (currentIndex > 0) goToSlide(currentIndex - 1);
+    }
+
+    // 開關目錄彈窗
+    function toggleToc(show) {
+      const modal = document.getElementById('toc-modal');
+      if (show) {
+        buildToc();
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      } else {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    }
+
+    // 全螢幕切換
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+
+    // 鍵盤操作支援（左右方向鍵、空白鍵）
+    document.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'Escape') {
+        toggleToc(false);
+      }
+    });
+
+    // 手機／平板左右滑動手勢支援
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchStartX - touchEndX;
+      if (Math.abs(diff) > 65) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+      }
+    }, { passive: true });
+
+    // ==================== 第 13 頁：互動移位決策樹邏輯 ====================
+    const quizNodes = {
+      start: {
+        question: '第一題：長輩的腳能撐住身體嗎？',
+        hint: '評估下肢承重能力（能否雙腳踩地支撐體重）',
+        options: [
+          { label: '💪 全部撐住', desc: '雙腳有力，可自行站穩', next: 'res_supervise', color: 'bg-sageLight border-sage' },
+          { label: '⚖️ 撐一部分', desc: '單側無力或肌力較弱，需部分協助', next: 'q_command', color: 'bg-mustardLight border-mustard' },
+          { label: '🪑 完全不行', desc: '下肢完全無法承重站立', next: 'q_sit_balance', color: 'bg-coralLight border-coral' }
+        ]
+      },
+      q_command: {
+        question: '第二題：長輩能配合口令嗎？',
+        hint: '評估認知理解與動作配合度（能否聽懂「數到三往前傾」）',
+        options: [
+          { label: '✅ 可以配合口令', desc: '能理解指令並一起發力', next: 'res_pivot_belt', color: 'bg-sageLight border-sage' },
+          { label: '❌ 無法配合口令', desc: '失智重度、躁動或完全無法理解指令', next: 'res_hoist', color: 'bg-coralLight border-coral' }
+        ]
+      },
+      q_sit_balance: {
+        question: '第二題：長輩「坐得穩」且「手有力」嗎？',
+        hint: '若下肢完全不能撐，需評估軀幹平衡與上肢推撐力',
+        options: [
+          { label: '🙆 坐得穩且手有力（也能配合口令）', desc: '上半身可自主支撐滑行', next: 'res_slide_board', color: 'bg-skyLight border-skySoft' },
+          { label: '🛌 坐不穩或手無力（或無法配合口令）', desc: '重度依賴，需要全身支撐', next: 'res_hoist', color: 'bg-coralLight border-coral' }
+        ]
+      },
+      res_supervise: {
+        isResult: true,
+        badge: '最佳建議方案',
+        title: '旁邊看護保護即可',
+        icon: '👀',
+        bg: 'bg-sageLight/80 border-sage',
+        summary: '長輩既然能全部撐住身體，千萬不要過度代勞！照顧者只需站在「無力側或後方」口頭引導與看護保護，鼓勵長輩自立完成移動，維持下肢肌力。'
+      },
+      res_pivot_belt: {
+        isResult: true,
+        badge: '最佳建議方案',
+        title: '站立樞軸轉位 ＋ 移位腰帶',
+        icon: '🥋',
+        bg: 'bg-mustardLight/80 border-mustard',
+        summary: '為長輩繫上「移位腰帶（ED01）」，照顧者採膝蓋對抗保護患側膝蓋，引導身體前傾（鼻子超過膝蓋）後，以健側腳為軸心畫小半圓轉位！'
+      },
+      res_slide_board: {
+        isResult: true,
+        badge: '最佳建議方案',
+        title: '移位滑板（Slide Board）',
+        icon: '🛹',
+        bg: 'bg-skyLight/80 border-skySoft',
+        summary: '在床與輪椅之間架設「移位滑板（ED02）」（目的地略低於出發點），讓長輩利用有力的雙手推撐，沿著平滑橋梁輕鬆滑行轉位，照顧者完全免抬舉！'
+      },
+      res_hoist: {
+        isResult: true,
+        badge: '最佳建議方案',
+        title: '電動移位機 ＋ 吊帶',
+        icon: '🏗️',
+        bg: 'bg-coralLight/80 border-coral',
+        summary: '當長輩完全無法承重且坐不穩／無法配合口令時，請務必使用「移位機＋吊帶（ED07+ED08）」進行懸吊式電動搬運，100% 解放照顧者的腰部，避免嚴重職業傷害！'
+      }
+    };
+
+    let quizHistory = [];
+
+    function renderQuiz(nodeKey) {
+      const node = quizNodes[nodeKey];
+      const container = document.getElementById('quiz-container');
+      const bcContainer = document.getElementById('quiz-breadcrumbs');
+
+      // 更新麵包屑軌跡
+      if (quizHistory.length === 0) {
+        bcContainer.innerHTML = `<span class="px-3 py-1 rounded-full bg-[#EFE5D1] text-xs font-bold text-[#6E5849]">起點：評估長輩下肢承重能力</span>`;
+      } else {
+        bcContainer.innerHTML = quizHistory.map((item, i) => `
+          <span class="px-3 py-1 rounded-full bg-mustardLight border border-mustard/40 text-xs font-black text-ink">
+            ${i + 1}. ${item}
+          </span>
+          ${i < quizHistory.length - 1 ? '<span class="text-xs font-bold text-[#8C7362]">➔</span>' : ''}
+        `).join('');
+      }
+
+      if (!node.isResult) {
+        container.innerHTML = `
+          <div class="text-center mb-6">
+            <h3 class="text-xl sm:text-3xl font-black text-ink mb-2">${node.question}</h3>
+            <p class="text-sm sm:text-base text-[#6E5849]">${node.hint}</p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-${node.options.length} gap-4">
+            ${node.options.map(opt => `
+              <button onclick="selectQuizOption('${opt.next}', '${opt.label}')" class="p-5 rounded-2xl border-2 ${opt.color} hover:scale-[1.02] active:scale-[0.99] transition text-left cursor-pointer shadow-sm flex flex-col justify-between">
+                <span class="text-lg sm:text-xl font-black text-ink block mb-1">${opt.label}</span>
+                <span class="text-xs sm:text-sm text-[#5C493E]">${opt.desc}</span>
+              </button>
+            `).join('')}
+          </div>
+        `;
+      } else {
+        container.innerHTML = `
+          <div class="rounded-2xl border-2 ${node.bg} p-6 text-center">
+            <span class="inline-block px-3 py-1 rounded-full bg-white text-ink font-black text-xs mb-3 shadow-xs">${node.badge}</span>
+            <div class="text-5xl mb-2">${node.icon}</div>
+            <h3 class="text-2xl sm:text-3xl font-black text-ink mb-3">${node.title}</h3>
+            <p class="text-base sm:text-lg text-[#4A3B32] font-bold leading-relaxed max-w-2xl mx-auto">
+              ${node.summary}
+            </p>
+          </div>
+        `;
+      }
+    }
+
+    function selectQuizOption(nextKey, chosenLabel) {
+      quizHistory.push(chosenLabel);
+      renderQuiz(nextKey);
+    }
+
+    function resetQuiz() {
+      quizHistory = [];
+      renderQuiz('start');
+    }
+
+    // ==================== 第 14 頁：防呆清單互動確認 ====================
+    function checkFoolproof() {
+      const cbs = Array.from(document.querySelectorAll('.foolproof-cb'));
+      const checkedCount = cbs.filter(cb => cb.checked).length;
+      const status = document.getElementById('foolproof-status');
+      if (checkedCount === cbs.length) {
+        status.textContent = '✅ 防呆完成，可以開始轉位！';
+        status.className = 'text-xs px-2.5 py-0.5 rounded-full bg-sage text-white font-black';
+      } else {
+        status.textContent = `已完成 ${checkedCount} / ${cbs.length} 項`;
+        status.className = 'text-xs px-2.5 py-0.5 rounded-full bg-white text-coral font-bold';
+      }
+    }
+
+    // 頁面載入時檢查網址 Hash 並初始化測驗
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQuiz('start');
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        const idx = slides.findIndex(s => s.id === hash);
+        if (idx !== -1) {
+          goToSlide(idx, false);
+          return;
+        }
+      }
+      goToSlide(0, false);
+    });
+  </script>
+</body>
+</html>
